@@ -1,12 +1,20 @@
 package com.brotz.keycloak;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.keycloak.KeycloakPrincipal;
+import org.springframework.stereotype.Component;
 
-@RestController
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
+
+@Component
+@Path("/")
 public class HelloController {
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello!";
+    @GET
+    @Path("/hello")
+    public String hello(@Context SecurityContext context) {
+        // Yikes.
+        return "Hello " + ((KeycloakPrincipal) context.getUserPrincipal()).getKeycloakSecurityContext().getToken().getName();
     }
 }
